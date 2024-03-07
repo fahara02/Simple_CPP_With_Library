@@ -2,8 +2,8 @@
 
 SRCDIR=./src
 LIBDIR=./lib
-OBJDIR=debug
 BUILDDIR=./build
+
 
 # Compilers definition.
 CC = g++
@@ -24,13 +24,16 @@ BUILDOBJ+= $(addprefix $(BUILDDIR)/,$(patsubst %.cpp,%.o, $(ONLYSRCS)))
 
 # Get all subdirectories of LIBDIR
 SUBDIRS := $(wildcard $(LIBDIR)/*/)
-INCFLAGS := $(addprefix -I,$(SUBDIRS))
+# BOOSTDIRS:= $(wildcard $(BOOSTLIB)/*/)
+# INCBASEBOOST:=$(addprefix -I,$(BOOSTLIB)/)
+INCDIRS := $(SUBDIRS)   
 
-# # Add this list to VPATH, the place make will look for the source files
-VPATH = $(SRCDIR)
+
+CFLAGS_INC= $(foreach dir, $(INCDIRS), $(addprefix -I, $(dir))) 
+ 
 
 # Compiler flags
-CFLAGS = -Wall -std=c++11 $(INCFLAGS)
+CFLAGS =-g -Wall -std=c++11 $(CFLAGS_INC)
 
 # Executable
 EXECUTABLE = $(BUILDDIR)/test.exe
@@ -50,16 +53,16 @@ $(EXECUTABLE): $(OBJS)
 $(BUILDDIR)/%.o: $(SRCDIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BUILDDIR)/%.o: $(LIBDIR)/%.cpp
-	$(CC) $(CFLAGS) -c $< -o $@
+
 	
 
 clean:
 	@echo "Cleaning......." $<
-	@echo "$(BUILDOBJ)" $<
+	@echo "$(BUILDDIR)" $<
 	@if exist "$(BUILDDIR)" (for %%i in ($(BUILDDIR)\*.o) do @del /Q "%%i")
 	@if exist "$(BUILDDIR)" (for %%i in ($(BUILDDIR)\*.exe) do @del /Q "%%i")
-	
 	@if exist "$(BUILDDIR)" rmdir /s /q "$(BUILDDIR)"
-	
 	@echo "Cleaning done!" $<
+
+test:	
+	@echo "$(CFLAGS_INC)" $<
