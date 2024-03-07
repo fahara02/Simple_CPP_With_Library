@@ -58,7 +58,8 @@ clean:
 	@echo "Cleaning......." $<
 	@echo "$(BUILDOBJ)" $<
 	@if exist "$(BUILDDIR)" (for %%i in ($(BUILDDIR)\*.o) do @del /Q "%%i")
-	@if exist "$(BUILDDIR)\test.exe" del /Q "$(BUILDDIR)\test.exe"
+	@if exist "$(BUILDDIR)" (for %%i in ($(BUILDDIR)\*.exe) do @del /Q "%%i")
+	
 	@if exist "$(BUILDDIR)" rmdir /s /q "$(BUILDDIR)"
 	
 	@echo "Cleaning done!" $<
